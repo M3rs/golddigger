@@ -1,0 +1,37 @@
+extern crate regex;
+extern crate reqwest;
+extern crate rusqlite;
+extern crate serde_json;
+
+mod golddigger;
+
+use golddigger::db::Database;
+use golddigger::slack;
+use golddigger::Listing;
+
+fn main() -> Result<(), Box<std::error::Error>> {
+    // TODO: config file?
+    let slack_url = "https://hooks.slack.com/services/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";
+
+    let body = reqwest::get("https://www.reddit.com/r/idlechampions.json")?.text()?;
+    let listing: Listing = serde_json::from_str(&body)?;
+
+    let db = Database::new("codes.db")?;
+    let existing = db.get_used()?;
+
+    // TODO: only check posts once?
+    let codes: Vec<_> = listing
+        .get_codes()
+        .iter()
+        .filter(|c| !existing.contains(c.as_str()))
+        .map(|c| c.to_string())
+        .collect();
+    codes.
+
+    if codes.len() > 0 {
+        slack::notify(&codes, slack_url)?;
+        db.add_codes(&codes)?;
+    }
+
+    Ok(())
+}
