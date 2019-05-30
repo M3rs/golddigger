@@ -1,9 +1,3 @@
-extern crate regex;
-extern crate reqwest;
-extern crate rusqlite;
-extern crate serde_json;
-extern crate toml;
-
 mod golddigger;
 
 use golddigger::db::Database;
