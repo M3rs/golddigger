@@ -12,9 +12,9 @@ pub struct Listing {
 impl Listing {
     pub fn get_codes(&self) -> Vec<String> {
         // Exclaimation points are valid?
-        let pattern = r"(?P<code>([A-Z!]{4}-?){4})\s";
+        let pattern = r"(?P<code>([A-Z!@]{4}-?){3})\s";
         let re = RegexBuilder::new(pattern)
-            .case_insensitive(true)
+            //.case_insensitive(true)
             .build()
             .expect("Error creating regex!!");
 
